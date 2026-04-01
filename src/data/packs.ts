@@ -1,10 +1,9 @@
-export type PackType = 'standard' | 'event' | 'collection'
+export type PackType = 'standard' | 'super' | 'event'
 
 export interface PackConfig {
   id: PackType
-  name: string
   nameJa: string
-  legendaryPity: number
+  legendaryPity: number | null  // null = no guaranteed pity
   color: string
   colorDim: string
 }
@@ -12,39 +11,37 @@ export interface PackConfig {
 export const PACK_CONFIGS: PackConfig[] = [
   {
     id: 'standard',
-    name: 'Apex Pack',
     nameJa: '通常パック',
     legendaryPity: 30,
     color: '#e0a840',
     colorDim: '#4a3a10',
   },
   {
-    id: 'event',
-    name: 'Event Pack',
-    nameJa: 'イベントパック',
-    legendaryPity: 24,
-    color: '#bf60ff',
-    colorDim: '#3a1060',
+    id: 'super',
+    nameJa: 'スーパーレジェンダリー',
+    legendaryPity: 500,
+    color: '#cc3333',
+    colorDim: '#3a0808',
   },
   {
-    id: 'collection',
-    name: 'Collection Event',
-    nameJa: 'コレクションイベント',
-    legendaryPity: 24,
-    color: '#40c0e0',
-    colorDim: '#103040',
+    id: 'event',
+    nameJa: 'イベントパック',
+    legendaryPity: null,
+    color: '#bf60ff',
+    colorDim: '#3a1060',
   },
 ]
 
 export interface PackState {
   count: number
   sinceLastLegendary: number
+  label: string
 }
 
 export type PacksState = Record<PackType, PackState>
 
 export const defaultPacksState = (): PacksState => ({
-  standard:   { count: 0, sinceLastLegendary: 0 },
-  event:      { count: 0, sinceLastLegendary: 0 },
-  collection: { count: 0, sinceLastLegendary: 0 },
+  standard: { count: 0, sinceLastLegendary: 0, label: '通常パック' },
+  super:    { count: 0, sinceLastLegendary: 0, label: 'スーパーレジェンダリー' },
+  event:    { count: 0, sinceLastLegendary: 0, label: 'イベントパック' },
 })
