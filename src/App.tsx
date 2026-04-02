@@ -8,53 +8,56 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('counter')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100svh', background: '#10101c' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100svh', background: '#f2f2ee' }}>
 
       <header style={{
-        padding: '0 16px',
-        height: '48px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        background: '#10101c',
-        borderBottom: '1px solid #1c1c2e',
+        padding: '14px 18px 12px',
+        background: '#fff',
+        borderBottom: '2px solid #e8e8e2',
         position: 'sticky',
         top: 0,
         zIndex: 10,
+        display: 'flex',
+        alignItems: 'flex-end',
+        justifyContent: 'space-between',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '16px', fontWeight: 900, color: '#e03030', letterSpacing: '4px' }}>APEX</span>
-          <span style={{ fontSize: '10px', color: '#333', letterSpacing: '2px' }}>パック天井トラッカー</span>
+        <div>
+          <div style={{ fontSize: '26px', fontWeight: 900, letterSpacing: '2px', lineHeight: 1, color: '#111' }}>
+            APEX
+            <span style={{ color: '#00B8D9' }}>·</span>
+            <span style={{ color: '#7DC900' }}>·</span>
+            <span style={{ color: '#F0C000' }}>·</span>
+          </div>
+          <div style={{ fontSize: '10px', color: '#aaa', letterSpacing: '2px', marginTop: '3px' }}>パック天井トラッカー</div>
         </div>
-        <span style={{ fontSize: '9px', color: '#222', letterSpacing: '1px' }}>非公式</span>
+        <span style={{ fontSize: '9px', color: '#ccc', letterSpacing: '1px' }}>非公式</span>
       </header>
 
       <div style={{
         display: 'flex',
-        background: '#10101c',
-        borderBottom: '1px solid #1c1c2e',
+        background: '#fff',
+        borderBottom: '2px solid #e8e8e2',
         position: 'sticky',
-        top: '48px',
+        top: '64px',
         zIndex: 9,
       }}>
         {(['counter', 'items'] as Tab[]).map(t => {
           const active = tab === t
-          const label = t === 'counter' ? 'パック開封' : 'アイテム'
           return (
             <button key={t} onClick={() => setTab(t)} style={{
               flex: 1,
               padding: '10px 0',
               background: 'none',
               border: 'none',
-              borderBottom: `2px solid ${active ? '#e03030' : 'transparent'}`,
+              borderBottom: `3px solid ${active ? '#111' : 'transparent'}`,
               cursor: 'pointer',
-              color: active ? '#fff' : '#383848',
+              color: active ? '#111' : '#bbb',
               fontSize: '12px',
-              fontWeight: active ? 700 : 400,
+              fontWeight: active ? 800 : 400,
               letterSpacing: '1px',
               transition: 'all 0.12s',
             }}>
-              {label}
+              {t === 'counter' ? 'パック開封' : 'アイテム'}
             </button>
           )
         })}

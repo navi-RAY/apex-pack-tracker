@@ -46,66 +46,74 @@ export default function PackCounter() {
   }
 
   return (
-    <div style={{ padding: '14px 12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {PACK_CONFIGS.map(cfg => {
+    <div style={{ padding: '14px 14px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+      {PACK_CONFIGS.map((cfg, i) => {
         const state = packs[cfg.id]
         const hasPity = cfg.legendaryPity !== null
         const pct = hasPity ? Math.min(state.sinceLastLegendary / cfg.legendaryPity!, 1) : 0
         const remaining = hasPity ? cfg.legendaryPity! - state.sinceLastLegendary : null
         const nearPity = remaining !== null && remaining <= Math.max(1, Math.round(cfg.legendaryPity! * 0.1))
         const isSuper = cfg.id === 'super'
+        const radius = i === 0 ? '12px 12px 0 0' : i === PACK_CONFIGS.length - 1 ? '0 0 12px 12px' : '0'
 
         return (
           <div key={cfg.id} style={{
-            background: '#1a1a28',
-            borderRadius: '10px',
+            background: '#fff',
+            borderRadius: radius,
             overflow: 'hidden',
-            boxShadow: `inset 0 0 0 1px ${cfg.color}33`,
+            borderLeft: `5px solid ${cfg.color}`,
           }}>
-            {/* ラベル行 */}
+            {/* 上段: ラベル＋リセット */}
             <div style={{
-              padding: '9px 14px',
-              background: `${cfg.color}14`,
+              padding: '10px 14px 0 12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              borderBottom: `1px solid ${cfg.color}22`,
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: cfg.color }}/>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: cfg.color, letterSpacing: '0.5px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: cfg.color, letterSpacing: '0.5px' }}>
                   {cfg.nameJa}
                 </span>
                 {isSuper && (
-                  <span style={{ fontSize: '9px', color: `${cfg.color}66` }}>通常パック連動</span>
+                  <span style={{ fontSize: '9px', color: '#bbb' }}>通常パック連動</span>
                 )}
               </div>
               <button onClick={() => reset(cfg.id)} style={{
-                background: 'none', border: 'none', color: '#383848', fontSize: '15px',
+                background: 'none', border: 'none', color: '#ccc', fontSize: '15px',
                 cursor: 'pointer', padding: '0 2px',
               }}>↺</button>
             </div>
 
-            {/* カウント表示 */}
-            <div style={{ padding: '10px 14px 0', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+            {/* 中段: 開封数 ＋ 天井まで */}
+            <div style={{
+              padding: '4px 14px 0 12px',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+            }}>
               <div>
-                <div style={{ fontSize: '9px', color: '#383848', marginBottom: '2px', letterSpacing: '1px' }}>開封数</div>
                 <div style={{
-                  fontSize: '80px', fontWeight: 900, lineHeight: 1,
-                  color: '#ffffff', letterSpacing: '-3px',
+                  fontSize: '88px',
+                  fontWeight: 900,
+                  lineHeight: 1,
+                  color: '#111',
+                  letterSpacing: '-4px',
                   fontVariantNumeric: 'tabular-nums',
                 }}>
                   {state.count}
                 </div>
               </div>
+
               {hasPity && (
-                <div style={{ textAlign: 'right', paddingBottom: '8px' }}>
-                  <div style={{ fontSize: '9px', color: '#383848', marginBottom: '4px', letterSpacing: '1px' }}>天井まで</div>
+                <div style={{ textAlign: 'right', paddingBottom: '10px' }}>
+                  <div style={{ fontSize: '9px', color: '#bbb', marginBottom: '2px' }}>天井まで</div>
                   <div style={{
-                    fontSize: '40px', fontWeight: 900, lineHeight: 1,
-                    color: nearPity ? '#ff3333' : cfg.color,
+                    fontSize: '44px',
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    letterSpacing: '-2px',
                     fontVariantNumeric: 'tabular-nums',
-                    letterSpacing: '-1px',
+                    color: nearPity ? '#e03030' : cfg.color,
                   }}>
                     {remaining}
                   </div>
@@ -115,37 +123,34 @@ export default function PackCounter() {
 
             {/* 天井バー */}
             {hasPity && (
-              <div style={{ padding: '10px 14px 12px' }}>
-                <div style={{ height: '6px', background: '#0c0c18', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ padding: '6px 14px 10px 12px' }}>
+                <div style={{ height: '4px', background: '#f0f0ec', borderRadius: '2px', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%',
                     width: `${pct * 100}%`,
-                    background: nearPity
-                      ? 'linear-gradient(90deg, #550000, #ff3333)'
-                      : `linear-gradient(90deg, ${cfg.colorDim}, ${cfg.color})`,
-                    borderRadius: '3px',
+                    background: nearPity ? '#e03030' : cfg.color,
+                    borderRadius: '2px',
                     transition: 'width 0.15s',
-                    boxShadow: `0 0 8px ${nearPity ? '#ff333366' : `${cfg.color}55`}`,
                   }}/>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
-                  <span style={{ fontSize: '9px', color: '#2c2c3c', letterSpacing: '1px' }}>天井 {cfg.legendaryPity}</span>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '3px' }}>
+                  <span style={{ fontSize: '9px', color: '#ccc' }}>天井 {cfg.legendaryPity}</span>
                 </div>
               </div>
             )}
 
-            {/* ボタン */}
-            <div style={{ display: 'flex', gap: '1px', background: '#0c0c18' }}>
-              <button onClick={() => decrement(cfg.id)} style={btnStyle('#1a1a28', '#303045')}>
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>－</span>
+            {/* ボタン行 */}
+            <div style={{ display: 'flex', borderTop: '1px solid #f0f0ec', marginTop: hasPity ? 0 : '8px' }}>
+              <button onClick={() => decrement(cfg.id)} style={btnStyle('#fff', '#ccc')}>
+                <span style={{ fontSize: '22px', lineHeight: 1 }}>－</span>
               </button>
-              <button onClick={() => increment(cfg.id)} style={{ ...btnStyle(`${cfg.color}22`, cfg.color), flex: 3 }}>
-                <span style={{ fontSize: '15px', fontWeight: 800, letterSpacing: '3px' }}>＋ 開封</span>
+              <button onClick={() => increment(cfg.id)} style={{ ...btnStyle(cfg.color, '#fff'), flex: 3 }}>
+                <span style={{ fontSize: '14px', fontWeight: 800, letterSpacing: '3px' }}>＋ 開封</span>
               </button>
               {hasPity && (
-                <button onClick={() => gotLegendary(cfg.id)} style={btnStyle('#1a1a28', cfg.color)} title="レジェンダリー獲得・天井リセット">
-                  <span style={{ fontSize: '20px', lineHeight: 1 }}>★</span>
-                  <span style={{ fontSize: '9px', marginTop: '2px' }}>レジェ獲得</span>
+                <button onClick={() => gotLegendary(cfg.id)} style={btnStyle('#fff', cfg.color)}>
+                  <span style={{ fontSize: '18px', lineHeight: 1 }}>★</span>
+                  <span style={{ fontSize: '9px', marginTop: '1px', fontWeight: 700 }}>レジェ獲得</span>
                 </button>
               )}
             </div>
@@ -158,7 +163,7 @@ export default function PackCounter() {
 
 function btnStyle(bg: string, color: string): React.CSSProperties {
   return {
-    flex: 1, height: '56px', background: bg, color,
+    flex: 1, height: '54px', background: bg, color,
     border: 'none', cursor: 'pointer',
     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
     gap: '2px',

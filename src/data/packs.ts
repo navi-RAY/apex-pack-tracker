@@ -3,7 +3,7 @@ export type PackType = 'standard' | 'super' | 'event'
 export interface PackConfig {
   id: PackType
   nameJa: string
-  legendaryPity: number | null  // null = no guaranteed pity
+  legendaryPity: number | null
   color: string
   colorDim: string
 }
@@ -13,22 +13,22 @@ export const PACK_CONFIGS: PackConfig[] = [
     id: 'standard',
     nameJa: '通常パック',
     legendaryPity: 30,
-    color: '#e0a840',
-    colorDim: '#4a3a10',
+    color: '#00B8D9',
+    colorDim: '#00B8D920',
   },
   {
     id: 'super',
     nameJa: 'スーパーレジェンダリー',
     legendaryPity: 500,
-    color: '#cc3333',
-    colorDim: '#3a0808',
+    color: '#7DC900',
+    colorDim: '#7DC90020',
   },
   {
     id: 'event',
     nameJa: 'イベントパック',
     legendaryPity: null,
-    color: '#bf60ff',
-    colorDim: '#3a1060',
+    color: '#F0C000',
+    colorDim: '#F0C00020',
   },
 ]
 

@@ -11,12 +11,16 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon-192.png', 'icon-512.png'],
+      workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+      },
       manifest: {
         name: 'APEX Pack Tracker',
         short_name: 'PackTracker',
         description: 'Apex Legends パック管理 & アイテムチェッカー',
-        theme_color: '#0c0c12',
-        background_color: '#0c0c12',
+        theme_color: '#f2f2ee',
+        background_color: '#f2f2ee',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/apex-pack-tracker/',
