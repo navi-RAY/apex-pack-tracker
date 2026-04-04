@@ -4,6 +4,7 @@ export type LegendId =
   | 'octane' | 'pathfinder' | 'rampart' | 'revenant' | 'valkyrie'
   | 'wraith' | 'ash' | 'madmaggie' | 'newcastle' | 'seer'
   | 'vantage' | 'catalyst' | 'ballistic' | 'conduit' | 'alter'
+  | 'wattson' | 'sparrow'
 
 export interface Legend {
   id: LegendId
@@ -37,4 +38,6 @@ export const LEGENDS: Legend[] = [
   { id: 'ballistic',  name: 'Ballistic',   nameJa: 'バリスティック' },
   { id: 'conduit',    name: 'Conduit',     nameJa: 'コンデュイット' },
   { id: 'alter',      name: 'Alter',       nameJa: 'オルター' },
+  { id: 'wattson',    name: 'Wattson',     nameJa: 'ワトソン' },
+  { id: 'sparrow',    name: 'Sparrow',     nameJa: 'スパロー' },
 ]

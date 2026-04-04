@@ -1,12 +1,11 @@
 import type React from 'react'
 import type { LegendId } from '../data/legends'
 
-interface Props { id: LegendId; size?: number; color?: string }
+interface Props { id: LegendId; size?: number; color?: string; bg?: string }
 
-export default function LegendIcon({ id, size = 44, color = '#e0e0e0' }: Props) {
+export default function LegendIcon({ id, size = 44, color = '#e0e0e0', bg = '#f8f8f4' }: Props) {
   const f = { fill: color, stroke: 'none' }
   const o = { fill: color, stroke: 'none', opacity: 0.3 }
-  const bg = '#0c0c12'
 
   const icons: Record<LegendId, React.ReactElement> = {
 
@@ -219,6 +218,22 @@ export default function LegendIcon({ id, size = 44, color = '#e0e0e0' }: Props) 
       <ellipse cx="24" cy="24" rx="19" ry="13" {...f}/>
       <ellipse cx="24" cy="24" rx="12" ry="7" fill={bg}/>
       <ellipse cx="24" cy="24" rx="5" ry="2.5" {...f}/>
+    </>),
+
+    // WATTSON — electric fence node: diamond + lightning bolt cutout
+    wattson: (<>
+      <path d="M24 4 L44 24 L24 44 L4 24 Z" {...f}/>
+      <path d="M27 14 L18 27 L24 27 L21 38 L30 25 L24 25 Z" fill={bg}/>
+    </>),
+
+    // SPARROW — bird in flight silhouette
+    sparrow: (<>
+      <ellipse cx="24" cy="28" rx="7" ry="5" {...f}/>
+      <path d="M17 26 Q10 14 2 10 Q8 20 14 24 Z" {...f}/>
+      <path d="M31 26 Q38 14 46 10 Q40 20 34 24 Z" {...f}/>
+      <path d="M18 32 L12 42 L24 34 L36 42 L30 32 Z" {...f}/>
+      <circle cx="24" cy="22" r="5" {...f}/>
+      <circle cx="26" cy="20" r="1.5" fill={bg}/>
     </>),
   }
 

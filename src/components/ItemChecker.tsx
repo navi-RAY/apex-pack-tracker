@@ -61,7 +61,7 @@ export default function ItemChecker() {
                   background: isSelected ? '#e8f8ff' : '#f8f8f4',
                   transition: 'all 0.12s',
                 }}>
-                  <LegendIcon id={l.id} size={40} color={isSelected ? '#00B8D9' : '#bbb'}/>
+                  <LegendIcon id={l.id} size={40} color={isSelected ? '#00B8D9' : '#bbb'} bg={isSelected ? '#e8f8ff' : '#f8f8f4'}/>
                 </div>
                 <span style={{ fontSize: '9px', color: isSelected ? '#00B8D9' : '#aaa', textAlign: 'center', fontWeight: isSelected ? 700 : 400 }}>
                   {l.nameJa}
@@ -117,7 +117,7 @@ export default function ItemChecker() {
                     background: isOwned ? `${cfg.color}22` : '#ececea',
                     borderRadius: '7px', flexShrink: 0,
                   }}>
-                    <LegendIcon id={selectedLegend} size={24} color={isOwned ? cfg.color : '#ccc'}/>
+                    <LegendIcon id={selectedLegend} size={24} color={isOwned ? cfg.color : '#ccc'} bg={isOwned ? `${cfg.color}22` : '#ececea'}/>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: '13px', fontWeight: 600, color: isOwned ? '#111' : '#aaa', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
