@@ -20,6 +20,7 @@ export type Booking = {
   customerContact: string
   note: string
   status: BookingStatus
+  reminded?: boolean
   createdAt: number
 }
 
@@ -102,6 +103,28 @@ export function setBookingStatus(id: string, status: BookingStatus) {
     bookings: state.bookings.map((b) => (b.id === id ? { ...b, status } : b)),
   }
   emit()
+}
+
+export function markReminded(id: string) {
+  state = {
+    ...state,
+    bookings: state.bookings.map((b) => (b.id === id ? { ...b, reminded: true } : b)),
+  }
+  emit()
+}
+
+// リマインド文面を組み立てる（LINE/メール送信を想定したデモ）
+export function reminderMessage(state: ShopState, b: Booking): string {
+  const svc = serviceById(state, b.serviceId)
+  return (
+    `【${state.shopName}】\n` +
+    `${b.customerName}様\n\n` +
+    `ご予約の前日になりましたのでお知らせします。\n` +
+    `📅 ${formatDateLabel(b.date)} ${b.time}〜\n` +
+    `💅 ${svc?.name ?? ''}（${svc?.durationMin ?? ''}分）\n\n` +
+    `ご来店お待ちしております。\n` +
+    `ご都合が悪くなった場合は、お早めにご連絡ください。`
+  )
 }
 
 // ---- ヘルパー ----

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { go } from '../App.tsx'
 import { Calendar } from './Calendar.tsx'
 import { Customers } from './Customers.tsx'
+import { Reminders } from './Reminders.tsx'
 import {
   addBooking,
   dateStr,
@@ -25,7 +26,7 @@ const STATUS_META: Record<BookingStatus, { label: string; cls: string }> = {
 }
 
 type Range = 'today' | 'week' | 'all'
-type Mode = 'list' | 'calendar' | 'customers'
+type Mode = 'list' | 'calendar' | 'reminder' | 'customers'
 
 function withinThisWeek(ymd: string): boolean {
   const today = new Date(todayStr())
@@ -105,58 +106,59 @@ export function Dashboard() {
         <Kpi label="無断キャンセル率" value={`${kpi.noshowRate}%`} sub="実績ベース" />
       </div>
 
-      {/* モード切替 + 追加 */}
-      <div className="mt-5 flex items-center justify-between">
-        <div className="inline-flex rounded-xl bg-gray-200/60 p-1 text-sm">
-          {(
-            [
-              ['list', '一覧'],
-              ['calendar', 'カレンダー'],
-              ['customers', '顧客'],
-            ] as [Mode, string][]
-          ).map(([m, label]) => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              className={
-                'rounded-lg px-3 py-1.5 font-semibold ' +
-                (mode === m ? 'bg-white shadow-sm' : 'text-gray-500')
-              }
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <button
-          onClick={() => setAdding(true)}
-          className="rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white"
-        >
-          ＋ 予約追加
-        </button>
+      {/* モード切替（横幅いっぱい・折り返さない） */}
+      <div className="mt-5 flex w-full gap-1 rounded-xl bg-gray-200/60 p-1">
+        {(
+          [
+            ['list', '一覧'],
+            ['calendar', 'カレンダー'],
+            ['reminder', 'リマインド'],
+            ['customers', '顧客'],
+          ] as [Mode, string][]
+        ).map(([m, label]) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className={
+              'flex-1 whitespace-nowrap rounded-lg px-1 py-1.5 text-center text-[13px] font-semibold ' +
+              (mode === m ? 'bg-white shadow-sm' : 'text-gray-500')
+            }
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {mode === 'list' && (
         <>
-          {/* 期間フィルタ */}
-          <div className="mt-4 inline-flex rounded-xl bg-gray-200/60 p-1 text-sm">
-            {(
-              [
-                ['today', '今日'],
-                ['week', '今週'],
-                ['all', 'すべて'],
-              ] as [Range, string][]
-            ).map(([r, label]) => (
-              <button
-                key={r}
-                onClick={() => setRange(r)}
-                className={
-                  'rounded-lg px-3 py-1.5 font-semibold ' +
-                  (range === r ? 'bg-white shadow-sm' : 'text-gray-500')
-                }
-              >
-                {label}
-              </button>
-            ))}
+          {/* 期間フィルタ + 追加 */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="inline-flex rounded-xl bg-gray-200/60 p-1 text-sm">
+              {(
+                [
+                  ['today', '今日'],
+                  ['week', '今週'],
+                  ['all', 'すべて'],
+                ] as [Range, string][]
+              ).map(([r, label]) => (
+                <button
+                  key={r}
+                  onClick={() => setRange(r)}
+                  className={
+                    'rounded-lg px-3 py-1.5 font-semibold ' +
+                    (range === r ? 'bg-white shadow-sm' : 'text-gray-500')
+                  }
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setAdding(true)}
+              className="rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white"
+            >
+              ＋ 予約追加
+            </button>
           </div>
 
           <div className="mt-4 space-y-2">
@@ -175,6 +177,12 @@ export function Dashboard() {
       {mode === 'calendar' && (
         <div className="mt-5">
           <Calendar />
+        </div>
+      )}
+
+      {mode === 'reminder' && (
+        <div className="mt-5">
+          <Reminders />
         </div>
       )}
 
