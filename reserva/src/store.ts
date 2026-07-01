@@ -176,3 +176,64 @@ export function slotsForDate(
 export function yen(n: number): string {
   return `¥${n.toLocaleString('ja-JP')}`
 }
+
+// ---- 顧客カルテ（予約履歴から集計）----
+export type CustomerSummary = {
+  name: string
+  contact: string
+  visits: number // 来店済み回数
+  upcoming: number // これからの予約数
+  noshows: number
+  totalSpent: number // 来店済みの合計金額
+  lastVisit: string // 最終来店日（YYYY-MM-DD、なければ ''）
+  favoriteService: string
+}
+
+export function customersFrom(state: ShopState): CustomerSummary[] {
+  const map = new Map<string, Booking[]>()
+  for (const b of state.bookings) {
+    const key = b.customerName.trim()
+    if (!key) continue
+    const arr = map.get(key) ?? []
+    arr.push(b)
+    map.set(key, arr)
+  }
+
+  const out: CustomerSummary[] = []
+  for (const [name, list] of map) {
+    const done = list.filter((b) => b.status === 'done')
+    const upcoming = list.filter((b) => b.status === 'confirmed')
+    const noshows = list.filter((b) => b.status === 'noshow')
+    const totalSpent = done.reduce(
+      (sum, b) => sum + (serviceById(state, b.serviceId)?.priceYen ?? 0),
+      0,
+    )
+    const lastVisit = done
+      .map((b) => b.date)
+      .sort()
+      .at(-1)
+
+    // 一番多く選ばれたメニュー
+    const counts = new Map<string, number>()
+    for (const b of list) {
+      const n = serviceById(state, b.serviceId)?.name ?? '不明'
+      counts.set(n, (counts.get(n) ?? 0) + 1)
+    }
+    const favoriteService =
+      [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '—'
+
+    out.push({
+      name,
+      contact: list.find((b) => b.customerContact)?.customerContact ?? '',
+      visits: done.length,
+      upcoming: upcoming.length,
+      noshows: noshows.length,
+      totalSpent,
+      lastVisit: lastVisit ?? '',
+      favoriteService,
+    })
+  }
+
+  // 合計利用額の多い順
+  return out.sort((a, b) => b.totalSpent - a.totalSpent)
+}

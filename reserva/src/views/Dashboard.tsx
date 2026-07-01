@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { go } from '../App.tsx'
+import { Calendar } from './Calendar.tsx'
+import { Customers } from './Customers.tsx'
 import {
   addBooking,
   dateStr,
@@ -23,6 +25,7 @@ const STATUS_META: Record<BookingStatus, { label: string; cls: string }> = {
 }
 
 type Range = 'today' | 'week' | 'all'
+type Mode = 'list' | 'calendar' | 'customers'
 
 function withinThisWeek(ymd: string): boolean {
   const today = new Date(todayStr())
@@ -47,6 +50,7 @@ function Kpi({ label, value, sub }: { label: string; value: string; sub?: string
 export function Dashboard() {
   const shop = useShop()
   const [range, setRange] = useState<Range>('today')
+  const [mode, setMode] = useState<Mode>('list')
   const [adding, setAdding] = useState(false)
 
   const active = shop.bookings.filter((b) => b.status !== 'cancelled')
@@ -101,22 +105,22 @@ export function Dashboard() {
         <Kpi label="無断キャンセル率" value={`${kpi.noshowRate}%`} sub="実績ベース" />
       </div>
 
-      {/* フィルタ + 追加 */}
+      {/* モード切替 + 追加 */}
       <div className="mt-5 flex items-center justify-between">
         <div className="inline-flex rounded-xl bg-gray-200/60 p-1 text-sm">
           {(
             [
-              ['today', '今日'],
-              ['week', '今週'],
-              ['all', 'すべて'],
-            ] as [Range, string][]
-          ).map(([r, label]) => (
+              ['list', '一覧'],
+              ['calendar', 'カレンダー'],
+              ['customers', '顧客'],
+            ] as [Mode, string][]
+          ).map(([m, label]) => (
             <button
-              key={r}
-              onClick={() => setRange(r)}
+              key={m}
+              onClick={() => setMode(m)}
               className={
                 'rounded-lg px-3 py-1.5 font-semibold ' +
-                (range === r ? 'bg-white shadow-sm' : 'text-gray-500')
+                (mode === m ? 'bg-white shadow-sm' : 'text-gray-500')
               }
             >
               {label}
@@ -131,17 +135,54 @@ export function Dashboard() {
         </button>
       </div>
 
-      {/* 一覧 */}
-      <div className="mt-4 space-y-2">
-        {list.length === 0 && (
-          <div className="rounded-2xl bg-white py-12 text-center text-sm text-gray-400">
-            この期間の予約はありません
+      {mode === 'list' && (
+        <>
+          {/* 期間フィルタ */}
+          <div className="mt-4 inline-flex rounded-xl bg-gray-200/60 p-1 text-sm">
+            {(
+              [
+                ['today', '今日'],
+                ['week', '今週'],
+                ['all', 'すべて'],
+              ] as [Range, string][]
+            ).map(([r, label]) => (
+              <button
+                key={r}
+                onClick={() => setRange(r)}
+                className={
+                  'rounded-lg px-3 py-1.5 font-semibold ' +
+                  (range === r ? 'bg-white shadow-sm' : 'text-gray-500')
+                }
+              >
+                {label}
+              </button>
+            ))}
           </div>
-        )}
-        {list.map((b) => (
-          <BookingCard key={b.id} booking={b} showDate={range !== 'today'} />
-        ))}
-      </div>
+
+          <div className="mt-4 space-y-2">
+            {list.length === 0 && (
+              <div className="rounded-2xl bg-white py-12 text-center text-sm text-gray-400">
+                この期間の予約はありません
+              </div>
+            )}
+            {list.map((b) => (
+              <BookingCard key={b.id} booking={b} showDate={range !== 'today'} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {mode === 'calendar' && (
+        <div className="mt-5">
+          <Calendar />
+        </div>
+      )}
+
+      {mode === 'customers' && (
+        <div className="mt-5">
+          <Customers />
+        </div>
+      )}
 
       {adding && <AddBookingSheet onClose={() => setAdding(false)} />}
 
