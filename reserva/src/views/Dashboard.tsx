@@ -3,6 +3,7 @@ import { go } from '../App.tsx'
 import { Calendar } from './Calendar.tsx'
 import { Customers } from './Customers.tsx'
 import { Reminders } from './Reminders.tsx'
+import { STRIPE_PAYMENT_LINK } from '../config.ts'
 import {
   addBooking,
   dateStr,
@@ -105,6 +106,31 @@ export function Dashboard() {
         <Kpi label="今週の売上見込" value={yen(kpi.weekSales)} />
         <Kpi label="無断キャンセル率" value={`${kpi.noshowRate}%`} sub="実績ベース" />
       </div>
+
+      {/* アップグレード導線 */}
+      <button
+        onClick={() => {
+          if (STRIPE_PAYMENT_LINK) {
+            window.open(STRIPE_PAYMENT_LINK, '_blank', 'noopener')
+          } else {
+            window.alert(
+              'デモ版のため決済は未接続です。\n' +
+                'Stripe の Payment Link を src/config.ts に設定すると、このボタンから実際に月額課金を受け付けられます。',
+            )
+          }
+        }}
+        className="mt-3 flex w-full items-center justify-between gap-3 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-left"
+      >
+        <div>
+          <div className="text-xs font-bold text-violet-700">Free プラン利用中</div>
+          <div className="text-sm text-gray-600">
+            Pro なら予約無制限・LINEリマインド — 月額¥1,480
+          </div>
+        </div>
+        <span className="shrink-0 rounded-lg bg-violet-600 px-3 py-1.5 text-sm font-bold text-white">
+          アップグレード
+        </span>
+      </button>
 
       {/* モード切替（横幅いっぱい・折り返さない） */}
       <div className="mt-5 flex w-full gap-1 rounded-xl bg-gray-200/60 p-1">
